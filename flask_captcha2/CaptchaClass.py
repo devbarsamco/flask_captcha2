@@ -35,14 +35,17 @@ class FlaskCaptcha:
             }
             return ctx
 
-        app.config["captcha_object_mapper"] = {}  # keep all captcha object : key:value -> name:object
+        app.config["captcha_object_mapper"] = {}  # keep all captcha object : key:value -> model_name:object
         self.__debug = app.debug
         self.__app = app
         self.__logger = get_logger(LogLevel=logging.INFO, CaptchaName="Flask-Captcha2-Master")
 
     def __print_log(self, message: str):
-        """print a log message"""
-        self.__logger.info(message)
+        """print a log message into stdout
+        base on app.config[GLOBAL_LOGGER] config
+        """
+        if self.__app.config.get('GLOBAL_LOGGER', False): # version added: 3.0.5
+                self.__logger.info(message)
 
     def getGoogleCaptcha2(self, name: str, conf: dict = None, *args, **kwargs) -> FlaskCaptcha2:
         """return a flask captcha object for google captcha version 2
